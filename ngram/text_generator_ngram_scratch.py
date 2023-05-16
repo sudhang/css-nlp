@@ -126,7 +126,7 @@ def create_ngram_model(n, path):
 
 if __name__ == "__main__":
     start = time.time()
-    m = create_ngram_model(6, 'bbc.txt')
+    m = create_ngram_model(6, 'data/bbc.txt')
 
     print (f'Language Model creating time: {time.time() - start}')
     start = time.time()
