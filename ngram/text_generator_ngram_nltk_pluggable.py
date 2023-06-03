@@ -3,6 +3,9 @@ import random
 from nltk.util import ngrams
 from collections import defaultdict
 
+
+nltk.download('punkt')
+
 class ArticleGenerator:
 
     def __init__(self, n, filename):
@@ -22,12 +25,10 @@ class ArticleGenerator:
         return model
 
     def generate_sentence(self, seed=None, max_sentence_length=20):
-        if seed is None:
-            seed = random.choice(list(self.model.keys()))
-        elif seed not in self.model:
-            raise ValueError(f"The seed provided is not found in the model")
-
-        sentence = list(seed)
+        if seed is not None and seed in self.model:
+            sentence = list(seed)
+        else:
+            sentence = list(random.choice(list(self.model.keys())))
 
         for _ in range(max_sentence_length):
             if tuple(sentence[-(self.n-1):]) in self.model:
@@ -43,8 +44,8 @@ class ArticleGenerator:
         article = []
 
         heading = self.generate_sentence(max_sentence_length=6)
-        byline = f"By {self.generate_sentence(seed=('John',), max_sentence_length=2)}"
-        location = f"{self.generate_sentence(seed=('New', 'York,'), max_sentence_length=2)} -"
+        byline = f"By {self.generate_sentence(seed=('Ukraine', 'with'), max_sentence_length=2)}"
+        location = f"{self.generate_sentence(seed=('The', 'UK'), max_sentence_length=2)} -"
 
         article.extend([heading, byline, location])
 
@@ -56,7 +57,7 @@ class ArticleGenerator:
 
 
 if __name__ == "__main__":
-    n = 3  # specify n here
+    n = 5  # specify n here
     filename = "data/bbc.txt"  # specify the filename here
 
     generator = ArticleGenerator(n, filename)
