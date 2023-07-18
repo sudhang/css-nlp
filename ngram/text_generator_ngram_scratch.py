@@ -126,12 +126,13 @@ def create_ngram_model(n, path):
 
 if __name__ == "__main__":
     start = time.time()
-    m = create_ngram_model(4, 'data/bbc.txt')
+    m = create_ngram_model(4, 'ngram/data/001_Stormshadow.txt')
 
     print (f'Language Model creating time: {time.time() - start}')
     start = time.time()
     #random.seed(7)
     print(f'{"="*50}\nGenerated text:')
+    generated_text = m.generate_text
     print(m.generate_text(600))
     print(f'{"="*50}')
 
