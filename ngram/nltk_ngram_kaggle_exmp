@@ -1,9 +1,13 @@
 
 import pandas as pd
+from nltk.lm.preprocessing import padded_everygram_pipeline
+from nltk.lm import MLE
+from nltk.tokenize.treebank import TreebankWordDetokenizer
+
+
 df = pd.read_csv('ngram/data/Donald-Tweets!.csv')
 df.head()
 
-from nltk.lm.preprocessing import padded_everygram_pipeline
 
 try: # Use the default NLTK tokenizer.
     from nltk import word_tokenize, sent_tokenize 
@@ -26,11 +30,9 @@ n = 3
 train_data, padded_sents = padded_everygram_pipeline(n, trump_corpus)
 
 
-from nltk.lm import MLE
 trump_model = MLE(n) # Lets train a 3-grams model, previously we set n=3
 trump_model.fit(train_data, padded_sents)
 
-from nltk.tokenize.treebank import TreebankWordDetokenizer
 
 detokenize = TreebankWordDetokenizer().detokenize
 
