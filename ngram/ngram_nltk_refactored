@@ -4,6 +4,7 @@ from nltk.lm.preprocessing import padded_everygram_pipeline
 from nltk.lm import MLE
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 import nltk
+import os
 
 
 # Function to tokenize text using NLTK tokenizer or fallback to a naive tokenizer
@@ -45,27 +46,37 @@ def generate_sentence(model, num_words, random_seed=42):
     return TreebankWordDetokenizer().detokenize(content)
 
 
-# Main function to execute the code for .txt file processing
-def process_txt_file(txt_file_path, n=3, num_words=50, random_seed=42):
-    with open(txt_file_path, 'r', encoding='utf-8') as file:
-        # Read the text from the .txt file
-        text = file.read()
+# Main function to execute the code for processing multiple .txt files
+def process_multiple_txt_files(txt_folder_path, n=3, num_words=20, random_seed=42):
+    nltk.download('punkt')
+    # List all .txt files in the specified folder
+    txt_files = [f for f in os.listdir(txt_folder_path) if f.endswith('.txt')]
+
+    # Preprocess and train the n-grams language model for each file
+    all_sentences = []
+    for txt_file in txt_files:
+        txt_file_path = os.path.join(txt_folder_path, txt_file)
+        with open(txt_file_path, 'r', encoding='utf-8') as file:
+            # Read the text from the .txt file
+            text = file.read()
 
 
-    # Preprocess the tokenized text for n-grams language modeling
-    train_data, padded_sents = preprocess_corpus([text], n)
+        # Preprocess the tokenized text for n-grams language modeling
+        train_data, padded_sents = preprocess_corpus([text], n)
 
+        # Train the n-grams language model
+        model = train_ngram_model(train_data, padded_sents, n)
 
-    # Train the n-grams language model
-    model = train_ngram_model(train_data, padded_sents, n)
+        # Generate a sentence using the trained model
+        sentence = generate_sentence(model, num_words, random_seed)
+        all_sentences.append(sentence)
 
-
-    # Generate a sentence using the trained model
-    return generate_sentence(model, num_words, random_seed)
+    return all_sentences
 
 
 if __name__ == "__main__":
-    nltk.download('punkt')
-    # Example usage for .txt file processing
-    txt_file_path = 'ngram/data/001_Stormshadow.txt'
-    print(process_txt_file(txt_file_path, n=3, num_words=50, random_seed=42)) # we should try with fixed and without fixed random_seed
+    # Example usage for processing multiple .txt files in a folder
+    txt_folder_path = 'ngram/data/txt_corpus'  # Modify this line with your folder path
+    sentences = process_multiple_txt_files(txt_folder_path, n=3, num_words=50, random_seed=42)
+    for i, sentence in enumerate(sentences):
+        print(f"Sentence {i+1}: {sentence}")
