@@ -24,14 +24,12 @@ def query_and_save_dataframe(tag, page, from_date):
     # we now only want to keep the columns id, type, sectionId, sectionName, webPublicationDate, webTitle, webURL, bodyHtml
     df = df[["id", "type", "sectionId", "sectionName", "webPublicationDate", "webTitle", "webUrl", "bodyHtml"]]
 
-    # we can also cleanup the bodyHtml column to remove all the <p> and <\p> tags
-    df["bodyHtml"] = df["bodyHtml"].apply(lambda x: re.sub("<p[^>]*>", "", x).replace("</p>", ""))
-    # we can also remove the <a> and </a> tags.  The stuff inside the <a> tags is still to be shown, but the <a> tags (including href attributes) themselves are removed
-    df["bodyHtml"] = df["bodyHtml"].apply(lambda x: re.sub("<a[^>]*>", "", x).replace("</a>", ""))
+    # we can also cleanup the bodyHtml column to remove all the html tags
+    df["bodyHtml"] = df["bodyHtml"].apply(lambda x: re.sub("<\/?[^>]*>", "", x))
 
     print(df.head())
 
-    tag = re.sub(r'[\\/:"*?<>|]+', '', tag)
+    tag = re.sub(r'[\\/:"*?<>|]+', '__', tag)
     df.to_csv(f"data/guardian_articles_{tag}.csv", index=False)
 
 
