@@ -1,0 +1,9 @@
+name: team26
+channels:
+  - defaults
+dependencies:
+  - python=3.11.3
+  - pip=23.0.1
+  - numpy
+  - nltk
+prefix: /Users/Paula_1/opt/anaconda3/envs/team26

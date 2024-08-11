@@ -1,0 +1,18 @@
+
+import requests as req
+import time
+API_KEY='8YeRZp8VaLH8F2TOuF9tcfeJqZSFHfGV' # your API key
+TOPIC='Technology' # keyword
+
+#https://api.nytimes.com/svc/search/v2/articlesearch.json?q=technology&api-key=yourkey
+
+
+for i in range(5):
+  url='https://api.nytimes.com/svc/search/v2/articlesearch.json?q='+TOPIC+'&api-key='+API_KEY+'&page='+str(i)
+  response = req.get(url).json()
+  print("Hello World")
+  print(f"article {i}: {str(response)}")
+
+  time.sleep(6)
+response
+
